@@ -1,5 +1,8 @@
 #include "Ressources.h"
 
+#define WinSizeW 640
+#define WinSizeH 480
+
 void loadRessources();
 
 int main(int argc, char* argv[]) {
@@ -16,7 +19,7 @@ int main(int argc, char* argv[]) {
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_FALSE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow(640, 480, "Gam Jam", NULL, NULL);
+	window = glfwCreateWindow(WinSizeW, WinSizeH, "Gam Jam", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -34,11 +37,26 @@ int main(int argc, char* argv[]) {
 
 	loadRessources();
 
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glViewport(0, 0, WinSizeW, WinSizeH);
+	glBindVertexArray(Res::defaultVAO);
 	while (!glfwWindowShouldClose(window))
 	{
+		glClearColor(0.0, 0.0, 0.0, 0.0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glUseProgram(Res::programs["billborad"]);
+		glBindTexture(GL_TEXTURE_2D, Res::textures["heart"].id_);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glUseProgram(0);
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+	glBindVertexArray(0);
 
 	glfwTerminate();
 
@@ -46,6 +64,7 @@ int main(int argc, char* argv[]) {
 }
 
 void loadRessources() {
-	Ressources::loadTexture("heart", "../res/images/heart.png");
-	Ressources::createProgram("billboard", vBillborad, fBillborad);
+	glGenVertexArrays(1, &Res::defaultVAO);
+	Res::loadTexture("heart", "../res/images/heart.png");
+	Res::createProgram("billboard", vBillborad, fBillborad);
 }

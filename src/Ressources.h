@@ -6,8 +6,9 @@
 #include "Texture.h"
 #include "ShaderLibrary.h"
 
-class Ressources {
+class Res {
 public:
+	static GLuint defaultVAO;
 	static std::map<std::string, Texture> textures;
 	static std::map<std::string, GLuint> programs;
 

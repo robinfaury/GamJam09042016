@@ -1,9 +1,11 @@
 #include "Ressources.h"
 
-std::map<std::string, Texture> Ressources::textures = {
+GLuint Res::defaultVAO = 0;
+
+std::map<std::string, Texture> Res::textures = {
 	{ "", Texture() }
 };
 
-std::map<std::string, GLuint> Ressources::programs = {
+std::map<std::string, GLuint> Res::programs = {
 	{ "", 0 }
 };
