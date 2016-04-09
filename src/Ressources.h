@@ -5,10 +5,12 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "ShaderLibrary.h"
+#include "Geometry.h"
 
 class Res {
 public:
 	static GLuint defaultVAO;
+	static std::map<std::string, GLuint> VAO;
 	static std::map<std::string, Texture> textures;
 	static std::map<std::string, GLuint> programs;
 
@@ -32,6 +34,18 @@ public:
 
 	static void createProgram(std::string name, const char* vertexShader, const char* fragmentShader) {
 		programs[name] = compileTwoShaderAndLinkProgram(vertexShader, GL_VERTEX_SHADER, fragmentShader, GL_FRAGMENT_SHADER);
+	}
+
+	static void createGeometry(std::string name, const GLfloat data[]) {
+		GLuint vao;
+		glGenVertexArrays(1, &vao);
+		glBindVertexArray(vao);
+			GLuint vbo;
+			glGenBuffers(1, &vbo);
+			glBindBuffer(GL_ARRAY_BUFFER, vbo);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+		glBindVertexArray(0);
+		VAO[name] = vao;
 	}
 
 private:

@@ -41,17 +41,16 @@ int main(int argc, char* argv[]) {
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glViewport(0, 0, WinSizeW, WinSizeH);
+
 	glBindVertexArray(Res::defaultVAO);
 	while (!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.0, 0.0, 0.0, 0.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glUseProgram(Res::programs["billborad"]);
+		glUseProgram(Res::programs["billboard"]);
 		glBindTexture(GL_TEXTURE_2D, Res::textures["heart"].id_);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glUseProgram(0);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -65,6 +64,7 @@ int main(int argc, char* argv[]) {
 
 void loadRessources() {
 	glGenVertexArrays(1, &Res::defaultVAO);
+	Res::createGeometry("billboard", triangle);
 	Res::loadTexture("heart", "../res/images/heart.png");
 	Res::createProgram("billboard", vBillborad, fBillborad);
 }
