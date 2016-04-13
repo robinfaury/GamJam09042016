@@ -100,10 +100,15 @@ int main(int argc, char* argv[]) {
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(AntAttribute) * sim.getNbAnts(), &antAttribute[0]);
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(AntAttribute), (GLvoid*)0);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(AntAttribute), (GLvoid*)(sizeof(glm::vec2)));
+		glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(AntAttribute), (GLvoid*)(sizeof(glm::vec2)+sizeof(glm::vec3)));
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
 		glUniform1f(glGetUniformLocation(Res::programs["ant"], "size"), 0.004);
 		glDrawArrays(GL_POINTS, 0, sim.getNbAnts());
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 		

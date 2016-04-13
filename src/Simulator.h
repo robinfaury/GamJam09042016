@@ -15,6 +15,7 @@ struct AntAttribute
 {
 	glm::vec2 pos;
 	glm::vec3 id;
+	float orientation;
 };
 
 class Simulator

@@ -48,7 +48,7 @@ static const char* fAnt = {
 	"void main()\n"
 	"{\n"
 	"    //outColor = texture2D(tex, texCoord);\n"
-	"    outColor = vec4(ocolor, 0.5-length(texCoord-vec2(0.5)));\n"
+	"    outColor = vec4(ocolor, 1.0-length(texCoord-vec2(0.5)));\n"
 	"}\n"
 };
 

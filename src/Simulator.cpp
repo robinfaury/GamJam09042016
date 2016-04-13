@@ -15,14 +15,18 @@ void Simulator::init(int mapSize, int collisionGridSize, int startingAnts)
 	ants_.reserve(startingAnts * 100);
 	ants_.push_back(new Queen(this, &attributes_[0].pos, 0));
 	attributes_[0].id = getColorAnt(QUEEN);
+	attributes_[0].orientation = 0.f;
 	for (int i = 1; i < startingAnts;)
 	{
 		ants_.push_back(new Drone(this, &attributes_[i].pos, i));
-		attributes_[i++].id = getColorAnt(DRONE);
+		attributes_[i].id = getColorAnt(DRONE);
+		attributes_[i++].orientation = 0.f;
 		ants_.push_back(new Warrior(this, &attributes_[i].pos, i));
-		attributes_[i++].id = getColorAnt(WARRIOR);
+		attributes_[i].id = getColorAnt(WARRIOR);
+		attributes_[i++].orientation = 0.f;
 		ants_.push_back(new Worker(this, &attributes_[i].pos, i));
-		attributes_[i++].id = getColorAnt(WORKER);
+		attributes_[i].id = getColorAnt(WORKER);
+		attributes_[i++].orientation = 0.f;
 	}
 
 	nbAnts_ = startingAnts;
