@@ -2,8 +2,8 @@
 
 GLuint Res::defaultVAO = 0;
 
-std::map<std::string, GLuint> Res::VAO = {
-	{ "", 0 }
+std::map<std::string, Mesh> Res::mesh = {
+	{ "", Mesh() }
 };
 
 std::map<std::string, Texture> Res::textures = {

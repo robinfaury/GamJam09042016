@@ -1,7 +1,5 @@
 #include "Ressources.h"
-
-#define WinSizeW 640
-#define WinSizeH 480
+#include "Camera.h"
 
 void loadRessources();
 
@@ -37,25 +35,25 @@ int main(int argc, char* argv[]) {
 
 	loadRessources();
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
 	glViewport(0, 0, WinSizeW, WinSizeH);
+	glEnable(GL_DEPTH_TEST);
 
-	glBindVertexArray(Res::defaultVAO);
+	Camera cam;
+
 	while (!glfwWindowShouldClose(window))
 	{
+		glBindVertexArray(Res::defaultVAO);
 		glClearColor(0.0, 0.0, 0.0, 0.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glUseProgram(Res::programs["billboard"]);
-		glBindTexture(GL_TEXTURE_2D, Res::textures["heart"].id_);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glUseProgram(Res::programs["mesh"]);
+		glBindTexture(GL_TEXTURE_2D, Res::textures["cube"].id_);
+		glUniformMatrix4fv(glGetUniformLocation(Res::programs["mesh"], "MVP"), 1, GL_FALSE, &cam.mvp[0][0]);
+		Res::mesh["cube"].draw();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-	glBindVertexArray(0);
 
 	glfwTerminate();
 
@@ -64,7 +62,9 @@ int main(int argc, char* argv[]) {
 
 void loadRessources() {
 	glGenVertexArrays(1, &Res::defaultVAO);
-	Res::createGeometry("billboard", triangle);
 	Res::loadTexture("heart", "../res/images/heart.png");
+	Res::loadTexture("cube", "../res/images/cube.png");
 	Res::createProgram("billboard", vBillborad, fBillborad);
+	Res::createProgram("mesh", vMesh, fMesh);
+	Res::loadGeometry("cube", "../res/meshes/cube.fbx");
 }
