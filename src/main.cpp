@@ -1,11 +1,17 @@
 #include "Ressources.h"
 #include "Camera.h"
+#include "Simulator.h"
+
+#define MAP_SIZE 100
+#define COL_GRID_SIZE 10
+#define START_ANTS 10
 
 void loadRessources();
 
 int main(int argc, char* argv[]) {
 
 	GLFWwindow* window;
+	Simulator sim(MAP_SIZE, COL_GRID_SIZE, START_ANTS );
 
 	if (!glfwInit()) {
 		return -1;
@@ -42,6 +48,8 @@ int main(int argc, char* argv[]) {
 
 	while (!glfwWindowShouldClose(window))
 	{
+		sim.step();
+
 		glBindVertexArray(Res::defaultVAO);
 		glClearColor(0.0, 0.0, 0.0, 0.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
