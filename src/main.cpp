@@ -6,7 +6,7 @@
 
 #define MAP_SIZE 100
 #define COL_GRID_SIZE 10
-#define START_ANTS 100000
+#define START_ANTS 1000
 
 void loadRessources();
 
@@ -69,6 +69,8 @@ int main(int argc, char* argv[]) {
 
 	glViewport(0, 0, WinSizeW, WinSizeH);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	Camera cam;
 
@@ -100,6 +102,7 @@ int main(int argc, char* argv[]) {
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(AntAttribute), (GLvoid*)(sizeof(glm::vec2)));
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
+		glUniform1f(glGetUniformLocation(Res::programs["ant"], "size"), 0.004);
 		glDrawArrays(GL_POINTS, 0, sim.getNbAnts());
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
@@ -119,6 +122,6 @@ void loadRessources() {
 	Res::loadTexture("cube", "../res/images/cube.png");
 	Res::createProgram("billboard", vBillborad, fBillborad);
 	Res::createProgram("mesh", vMesh, fMesh);
-	Res::createProgram("ant", vant, gant, fant);
+	Res::createProgram("ant", vAnt, gAnt, fAnt);
 	Res::loadGeometry("cube", "../res/meshes/cube.fbx");
 }
