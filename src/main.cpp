@@ -2,6 +2,11 @@
 
 #include "Ressources.h"
 #include "Camera.h"
+#include "Simulator.h"
+
+#define MAP_SIZE 100
+#define COL_GRID_SIZE 10
+#define START_ANTS 100000
 
 void loadRessources();
 
@@ -23,20 +28,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
-struct t {
-	glm::vec2 pos;
-	glm::vec3 color;
-	t(glm::vec2 p, glm::vec3 i) {
-		pos = p;
-		color = i;
-	}
-};
-
 int main(int argc, char* argv[]) {
 
 	srand(time(NULL));
 
 	GLFWwindow* window;
+	Simulator sim(MAP_SIZE, COL_GRID_SIZE, START_ANTS );
+	std::vector<AntAttribute>& antAttribute = sim.getAntAttributes();
 
 	if (!glfwInit()) {
 		return -1;
@@ -55,8 +53,10 @@ int main(int argc, char* argv[]) {
 		return -1;
 	}
 	glfwSetKeyCallback(window, key_callback);
+	
 
 	glfwMakeContextCurrent(window);
+	glfwSwapInterval(1);
 
 	glewExperimental = true;
 	if (glewInit() != GLEW_OK) {
@@ -72,18 +72,12 @@ int main(int argc, char* argv[]) {
 
 	Camera cam;
 
-
-	std::vector<t> position;
-	for (int i = 0; i < 10000; ++i) {
-		position.push_back(t(glm::vec2((rand()%100)/50.f - 1.f, (rand() % 100) / 50.f - 1.f), glm::vec3(0.2f*(rand()%5))));
-	}
-
 	GLuint antVAO, antVBO;
 	glGenVertexArrays(1, &antVAO);
 	glGenBuffers(1, &antVBO);
 	glBindVertexArray(antVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, antVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(t) * position.size(), &position[0], GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(AntAttribute) * antAttribute.size(), &antAttribute[0], GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
@@ -92,23 +86,21 @@ int main(int argc, char* argv[]) {
 	while (!glfwWindowShouldClose(window))
 	{
 		FPS();
+		sim.step();
+
+		glBindVertexArray(Res::defaultVAO);
 		glClearColor(0.0, 0.0, 0.0, 0.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		for (std::vector<t>::iterator it = position.begin(); it != position.end(); it++) {
-			(*it).pos.x += ((rand() % 100) / 50.f - 1.f) / 1000.f;
-			(*it).pos.y += ((rand() % 100) / 50.f - 1.f) / 1000.f;
-		}
 
 		glUseProgram(Res::programs["ant"]);
 		glBindVertexArray(antVAO);
 		glBindBuffer(GL_ARRAY_BUFFER, antVBO);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(t) * position.size(), &position[0]);
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(t), (GLvoid*)0);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(t), (GLvoid*)(sizeof(glm::vec2)));
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(AntAttribute) * sim.getNbAnts(), &antAttribute[0]);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(AntAttribute), (GLvoid*)0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(AntAttribute), (GLvoid*)(sizeof(glm::vec2)));
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
-		glDrawArrays(GL_POINTS, 0, position.size());
+		glDrawArrays(GL_POINTS, 0, sim.getNbAnts());
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 		
