@@ -55,6 +55,10 @@ public:
 		programs[name] = compileTwoShaderAndLinkProgram(vertexShader, GL_VERTEX_SHADER, fragmentShader, GL_FRAGMENT_SHADER);
 	}
 
+	static void createProgram(std::string name, const char* vertexShader, const char* geometryShader, const char* fragmentShader) {
+		programs[name] = compileThreeShaderAndLinkProgram(vertexShader, GL_VERTEX_SHADER, geometryShader, GL_GEOMETRY_SHADER, fragmentShader, GL_FRAGMENT_SHADER);
+	}
+
 	static void createGeometry(std::string name, std::vector<Vertex>& vertices, std::vector<GLuint>& indices, std::vector<Property> property) {
 		GLuint vao, vbo, ebo;
 		glGenVertexArrays(1, &vao);

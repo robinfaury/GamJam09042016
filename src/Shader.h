@@ -49,3 +49,28 @@ static GLuint compileTwoShaderAndLinkProgram(std::string shaderCodeOne, GLuint s
 
 	return programID;
 }
+
+static GLuint compileThreeShaderAndLinkProgram(std::string shaderCodeOne, GLuint shaderTypeOne, std::string shaderCodeTwo, GLuint shaderTypeTwo, std::string shaderCodeThree, GLuint shaderTypeThree) {
+	GLuint vertexID = compileShader(shaderCodeOne, shaderTypeOne);
+	GLuint geometryID = compileShader(shaderCodeTwo, shaderTypeTwo);
+	GLuint fragmentID = compileShader(shaderCodeThree, shaderTypeThree);
+
+	GLuint programID = glCreateProgram();
+	glAttachShader(programID, vertexID);
+	glAttachShader(programID, geometryID);
+	glAttachShader(programID, fragmentID);
+	glLinkProgram(programID);
+
+	GLint success;
+	GLchar log[512];
+	glGetProgramiv(programID, GL_LINK_STATUS, &success);
+	if (!success) {
+		glGetProgramInfoLog(programID, 512, NULL, log);
+		std::cout << "LINK PROGRAM FAIL: \n" << log << std::endl;
+	}
+
+	glDeleteShader(vertexID);
+	glDeleteShader(fragmentID);
+
+	return programID;
+}

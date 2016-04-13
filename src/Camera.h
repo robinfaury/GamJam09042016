@@ -1,7 +1,7 @@
 #pragma once
 
-#define WinSizeW 640
-#define WinSizeH 480
+#define WinSizeW 1000
+#define WinSizeH 1000
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
